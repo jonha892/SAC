@@ -14,62 +14,67 @@ import re
 import smtplib
 from argparse import ArgumentParser
 from email.message import EmailMessage
+from collections import namedtuple
 
 
-# TODO: processed Vergleich vorher (beim Scrapen der URLs) moeglich?
+Movie = namedtuple("Movie", ["name", "url"])
 
 
-def send_mail(name_url_pair, addr, password, to):
-    m = "Ab sofort sollte es moeglich sein, auf {} Kinokarten fuer {} vorzubestellen. Diese E-Mail wird nur einmal versandt.".format(
-        name_url_pair[1], name_url_pair[0]
+def send_mail(movie, sender, password, recipient, cc):
+    msg_content = """Ab sofort sollte es moeglich sein, auf
+{}
+Kinokarten fuer '{}' vorzubestellen.
+
+Diese E-Mail wird nur einmal versandt.""".format(
+        movie.url, movie.name
     )
     msg = EmailMessage()
-    msg.set_content(m)
-    msg["Subject"] = (
-        "Für" + name_url_pair[0] + "können jetzt Karten vorbestellt werden!"
-    )
-    msg["From"] = addr
-    msg["To"] = to
+    msg.set_content(msg_content)
+    msg["Subject"] = "Für '" + movie.name + "' können jetzt Karten vorbestellt werden!"
+    msg["From"] = sender
+    msg["To"] = recipient
+    if cc is not None:
+        msg["Cc"] = cc
 
     server = smtplib.SMTP("smtp.gmail.com", 587)
     server.ehlo()
     server.starttls()
     server.ehlo()
-    server.login(addr, password)
+    server.login(sender, password)
     server.send_message(msg)
-    print("Email für", name_url_pair[0], "wurde an", addr, "gesendet.")
-    return True
+    cc_string = ""
+    if cc is not None:
+        cc_string = "und " + cc
+    print("Email für", movie.name, "wurde an", recipient, cc_string, "gesendet.")
 
 
 # Searches for tables on the webpage. If the page only contains one table it means that there are
 # now screenings available for preorder.
 def is_available(html_string, url):
-    s = BeautifulSoup(html_string, "html.parser")
-    tables = s.find_all("div", class_="tx-spmovies-pi1-timetable")
-    l = len(tables)
-    # print('URL ', url, ' hat ', l, ' Tabellen.')
-    if l == 1:
+    soup_available = BeautifulSoup(html_string, "html.parser")
+    movies_1_table = soup_available.find_all("div", class_="tx-spmovies-pi1-timetable")
+    length_movies_1_table = len(movies_1_table)
+    if length_movies_1_table == 1:
         return True
     return False
 
 
-def check_urls(urls):
+def check_movies(movies):
     print("Es wird nach neuen Vorstellungen gesucht...")
     available_movies = []
-    for (name, url) in urls:
-        response = requests.get(url)
-        if is_available(response.text, url):
-            available_movies.append((name, url))
+    for movie in movies:
+        response = requests.get(movie.url)
+        if is_available(response.text, movie.url):
+            available_movies.append(movie)
     return available_movies
 
 
-def list_upcoming():
+def list_upcoming(blacklist):
     url = "https://www.savoy-filmtheater.de/filmprogramm/coming-soon.html"
     response = requests.get(url)
     soup_coming_soon = BeautifulSoup(response.text, "html.parser")
 
-    # Create a list of links for all upcoming movies - HOW EXACTLY? What is x, why is the ...savoy..
-    # String necessary?
+    # Create a list of links for all upcoming movies
     list_movies = [
         "https://www.savoy-filmtheater.de/" + x["href"]
         for x in soup_coming_soon.find_all("a", href=True)
@@ -82,7 +87,8 @@ def list_upcoming():
     for movie in list_movies:
         link = movie.replace("coming-soon/", "")
         name = re.search("film/(.*).html", link)
-
+        if name in blacklist:
+            continue
         # If the name is not empty, make it pretty and add it to the list.
         if name is not None:
             name = (
@@ -93,46 +99,38 @@ def list_upcoming():
                 .title()
             )
         else:
-            name = "Name für" + movie + "konnte nicht ermittelt werden."
+            name = "Name für " + movie + " konnte nicht ermittelt werden."
 
         if "-1.html" in link:
             link_with_1 = link
-            link_without = link.replace("-1.html", ".html")
+            link_without_1 = link.replace("-1.html", ".html")
         else:
             link_with_1 = link.replace(".html", "-1.html")
-            link_without = link
-        list_name_url += [(name, link_with_1), (name, link_without)]
-    # pprint(res_list)
+            link_without_1 = link
+        m1 = Movie(name, link_with_1)
+        m2 = Movie(name, link_without_1)
+        list_name_url += [m1, m2]
     return list_name_url
 
 
-def main(addr, password, recipient):
-    upcoming = list_upcoming()
-    available = check_urls(upcoming)
-    if len(available) > 0:
-        # print("Die folgenden URLs sind verfügbar:", available)
-        # processed.txt contains one URL per line. This URL was found in a previous execution of the
-        # script and does not need to be sent again.
-        with open("processed.txt", "a+") as file_processed:
-            # Since a+ is used, the pointer is at the end of the file. In order to read lines from
-            # the beginning we have to put it at the beginning.
-            file_processed.seek(0)
-            list_processed_urls = file_processed.read().splitlines()
-            # print("Diese URLs wurden bereits verschickt:", p)
-            count_mails = 0
-            for (name, a) in available:
-                # count_mails += 1
-                if a not in list_processed_urls:
-                    send_mail((name, a), addr, password, recipient)
-                    file_processed.write(a + "\n")
-                else:
-                    print("Für", name, "wurde bereits eine E-Mail verschickt.")
-            # print(
-            #    "Es wurden E-Mails für ", count_mails, "neue Vorstellungen verschickt."
-            # )
-
-    else:
-        print("Keine URLs gefunden.")
+def main(sender, password, recipient, cc):
+    # processed.txt contains one URL per line. This URL was found in a previous execution of the
+    # script and does not need to be sent again.
+    with open("processed.txt", "a+") as file_processed:
+        file_processed.seek(0)
+        list_processed_urls = file_processed.read().splitlines()
+        upcoming = list_upcoming(list_processed_urls)
+        available_movies = check_movies(upcoming)
+        if len(available_movies) == 0:
+            print("Keine URLs gefunden.")
+        # Since a+ is used, the pointer is at the end of the file. In order to read lines from
+        # the beginning we have to put it at the beginning.
+        for movie in available_movies:
+            if movie.url not in list_processed_urls:
+                send_mail(movie, sender, password, recipient, cc)
+                file_processed.write(movie.url + "\n")
+            else:
+                print("Für", movie.name, "wurde bereits eine E-Mail verschickt.")
 
 
 if __name__ == "__main__":
@@ -149,5 +147,10 @@ if __name__ == "__main__":
     parser.add_argument(
         "-r", "--recipient", help="The recipient email address.", required=True
     )
+    parser.add_argument(
+        "-cc",
+        "--cc",
+        help="Another email address to which the message should be sent to.",
+    )
     args = parser.parse_args()
-    main(args.sender, args.password, args.recipient)
+    main(args.sender, args.password, args.recipient, args.cc)
