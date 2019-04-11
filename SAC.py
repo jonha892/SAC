@@ -5,6 +5,7 @@ Scrapes the Coming Soon website for https://www.savoy-filmtheater.de in order to
 are releasing soon. Then it checks whether there are screenings available for those movies. It sends
 an email to the provided email address containing the name of the movies with available screenings. 
 """
+
 import requests
 from bs4 import BeautifulSoup
 
@@ -50,11 +51,17 @@ Diese E-Mail wird nur einmal versandt.""".format(
 
 # Searches for tables on the webpage. If the page only contains one table it means that there are
 # now screenings available for preorder.
-def is_available(html_string, url):
+def is_available(html_string):
     soup_available = BeautifulSoup(html_string, "html.parser")
     movies_1_table = soup_available.find_all("div", class_="tx-spmovies-pi1-timetable")
     length_movies_1_table = len(movies_1_table)
-    if length_movies_1_table == 1:
+    if length_movies_1_table >= 1:
+        children = movies_1_table.findChildren("p", recursive=True)
+        for child in children:
+            txt = child.text
+            if re.search("Wartungs", txt):
+                print("Wartungsarbeiten erkannt...")
+                return False
         return True
     return False
 
@@ -64,7 +71,7 @@ def check_movies(movies):
     available_movies = []
     for movie in movies:
         response = requests.get(movie.url)
-        if is_available(response.text, movie.url):
+        if is_available(response.text):
             available_movies.append(movie)
     return available_movies
 
