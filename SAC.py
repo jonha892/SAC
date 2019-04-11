@@ -56,7 +56,9 @@ def is_available(html_string):
     soup_available = BeautifulSoup(html_string, "html.parser")
     movies_tables = soup_available.find_all("div", class_="tx-spmovies-pi1-timetable")
     length_movies_tables = len(movies_tables)
-    if length_movies_tables >= 1:
+    # Check that there is only 1 table, since you will be redirected to another page if the URL
+    # provided doesn't lead anywhere. Then there might be more than 1 table.
+    if length_movies_tables == 1:
         for table in movies_tables:
             children = table.findChildren("p", recursive=True)
             for child in children:
@@ -165,7 +167,7 @@ if __name__ == "__main__":
         help="Another email address to which the message should be sent to.",
     )
     parser.add_argument(
-        "-p",
+        "-pp",
         "--path_processed",
         help="Path to the file containing the processed URLs.",
         required=True,
