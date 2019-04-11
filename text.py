@@ -4,16 +4,15 @@ import SAC
 
 import unittest
 
+x_men_coming_soon = "data/coming_soon.html"
+
 
 class TestSAC(unittest.TestCase):
-    def test_wartungsarbeiten(self, html_fn):
-        with open(html_fn, "r") as f:
+    def test_wartungsarbeiten(self):
+        with open(x_men_coming_soon, "r") as f:
             html = f.read()
-            self.assertTrue(SAC.is_available(html))
+            self.assertFalse(SAC.is_available(html))
 
 
 if __name__ == "__main__":
-    parser = ArgumentParser()
-    parser.add_argument("-h", "html", "HTML to be parsed")
-    args = parser.parse_args()
     unittest.main()

@@ -54,21 +54,25 @@ Diese E-Mail wird nur einmal versandt.""".format(
 # now screenings available for preorder.
 def is_available(html_string):
     soup_available = BeautifulSoup(html_string, "html.parser")
-    movies_1_table = soup_available.find_all("div", class_="tx-spmovies-pi1-timetable")
-    length_movies_1_table = len(movies_1_table)
-    if length_movies_1_table >= 1:
-        children = movies_1_table.findChildren("p", recursive=True)
-        for child in children:
-            txt = child.text
-            if re.search("Wartungs", txt):
-                print("Wartungsarbeiten erkannt...")
-                return False
+    movies_tables = soup_available.find_all("div", class_="tx-spmovies-pi1-timetable")
+    length_movies_tables = len(movies_tables)
+    if length_movies_tables >= 1:
+        for table in movies_tables:
+            children = table.findChildren("p", recursive=True)
+            for child in children:
+                txt = child.text
+                if re.search("Wartungs", txt):
+                    print("Wartungsarbeiten erkannt...")
+                    return False
         return True
     return False
 
 
 def check_movies(movies):
-    print(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "- Es wird nach neuen Vorstellungen gesucht...")
+    print(
+        datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "- Es wird nach neuen Vorstellungen gesucht...",
+    )
     available_movies = []
     for movie in movies:
         response = requests.get(movie.url)
