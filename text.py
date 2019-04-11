@@ -4,7 +4,7 @@ import SAC
 
 import unittest
 
-x_men_coming_soon = "data/coming_soon.html"
+x_men_coming_soon = "data/coming_soon_x_men.html"
 
 
 class TestSAC(unittest.TestCase):
