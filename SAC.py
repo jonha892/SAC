@@ -125,10 +125,10 @@ def list_upcoming(blacklist):
     return list_name_url
 
 
-def main(sender, password, recipient, cc):
-    # processed.txt contains one URL per line. This URL was found in a previous execution of the
+def main(sender, password, recipient, cc, path_processed):
+    # path_processed contains one URL per line. This URL was found in a previous execution of the
     # script and does not need to be sent again.
-    with open("processed.txt", "a+") as file_processed:
+    with open(path_processed, "a+") as file_processed:
         file_processed.seek(0)
         list_processed_urls = file_processed.read().splitlines()
         upcoming = list_upcoming(list_processed_urls)
@@ -164,5 +164,11 @@ if __name__ == "__main__":
         "--cc",
         help="Another email address to which the message should be sent to.",
     )
+    parser.add_argument(
+        "-p",
+        "--path_processed",
+        help="Path to the file containing the processed URLs.",
+        required=True,
+    )
     args = parser.parse_args()
-    main(args.sender, args.password, args.recipient, args.cc)
+    main(args.sender, args.password, args.recipient, args.cc, args.path_processed)
