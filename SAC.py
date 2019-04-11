@@ -17,6 +17,7 @@ from argparse import ArgumentParser
 from email.message import EmailMessage
 from collections import namedtuple
 
+from datetime import datetime
 
 Movie = namedtuple("Movie", ["name", "url"])
 
@@ -67,7 +68,7 @@ def is_available(html_string):
 
 
 def check_movies(movies):
-    print("Es wird nach neuen Vorstellungen gesucht...")
+    print(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "- Es wird nach neuen Vorstellungen gesucht...")
     available_movies = []
     for movie in movies:
         response = requests.get(movie.url)
