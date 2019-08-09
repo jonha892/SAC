@@ -10,13 +10,11 @@ import requests
 from bs4 import BeautifulSoup
 
 from pprint import pprint
-
 import re
 import smtplib
 from argparse import ArgumentParser
 from email.message import EmailMessage
 from collections import namedtuple
-
 from datetime import datetime
 
 Movie = namedtuple("Movie", ["name", "url"])
