@@ -10,6 +10,20 @@ config :sac, :recipients, "./recipients.txt"
 discord_channel = System.get_env("SAC_DISCORD_CHANNEL") || raise "The environment variable 'SAC_DISCORD_CHANNEL' is not set."
 config :sac, :discord_channel, discord_channel
 
+discord_debug_channel = System.get_env("SAC_DISCORD_DEBUG_CHANNEL") || raise "The environment variable 'SAC_DISCORD_DEBUG_CHANNEL' is not set."
+config :sac, :discord_debug_channel, discord_debug_channel
+
+discord_welcome_channel = System.get_env("SAC_DISCORD_WELCOME_CHANNEL") || raise "The environment variable 'SAC_DISCORD_WELCOME_CHANNEL' is not set."
+config :sac, :discord_welcome_channel, discord_welcome_channel
+
+guild_id = System.get_env("SAC_DISCORD_GUILD_ID") || raise "The environment variable 'SAC_DISCORD_GUILD_ID' is not set."
+config :sac, :discord_guild_id, guild_id
+role_id = System.get_env("SAC_DISCORD_ROLE_ID") || raise "The environment variable 'SAC_DISCORD_ROLE_ID' is not set."
+config :sac, :discord_role_id, role_id
+
+role_reference = "<@&" <> role_id <> ">"
+config :sac, :discord_channel_role_name, role_reference
+
 bamboo_username = System.get_env("SAC_SENDER_MAIL") || raise "The environment variable 'SAC_SENDER_MAIL' is not set."
 bamboo_password = System.get_env("SAC_SENDER_PASSWORD") || raise "The environment variable 'SAC_SENDER_PASSWORD' is not set."
 

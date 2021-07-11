@@ -2,9 +2,6 @@
 Savoy Availability Checker
 
 
-
-
-
 Todo v2 elixir:
 - refactoring
   - [x] secrets in env ✔
@@ -16,7 +13,16 @@ Todo v2 elixir:
 - [] Database
   - [] concurrency
 
+- [] Windows 'ding' ändern
+
+- [] Discord Server ausbauen
+  - [] eigene emoji für subsribe
+  - [] Channel message
 - [] Discord Bot ausbauen
-  - [] USER clicks on REACTION
-  - [] USER gets assigned ROLE
-  - [] ROLE can see CHANNEL
+  - [] Listen to exact message
+  - [x] USER clicks on REACTION
+  - [x] USER gets assigned ROLE
+  - [x] ROLE can see CHANNEL
+  - [x] ROLE unregister Discord
+  - [] Email registrieren
+  - [] ROLE unregister Email
