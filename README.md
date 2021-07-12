@@ -18,6 +18,8 @@ Todo v2 elixir:
 - [] Discord Server ausbauen
   - [] eigene emoji für subsribe
   - [] Channel message
+- [] Health check -> reporting
+  - Heartbeat -> raspberry pie
 - [] Discord Bot ausbauen
   - [] Listen to exact message
   - [x] USER clicks on REACTION

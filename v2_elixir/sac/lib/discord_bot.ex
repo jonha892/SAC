@@ -15,7 +15,7 @@ defmodule SAC.DiscordBot do
 
   def publish_notification(txt) do
     Logger.debug "Publishing the message: " <> txt <> " to the channel " <> Integer.to_string(@channel)
-    r = Api.create_message(@channel, @channel_role_name <> " " <>txt)
+    r = Api.create_message(@channel, @channel_role_name <> " " <> txt)
     Logger.debug "Publishing response: " <> inspect r
   end
 
