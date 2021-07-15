@@ -1,5 +1,11 @@
 import Config
 
+config :sac, SAC.Scheduler,
+  jobs: [
+    #{"*/15 * * * *",  {SAC.Checking, ":main", []}},
+    {"* * * * *",  {SAC.Checking, :main, []}},
+  ]
+
 config :sac, :savoy_preview_url, "https://savoy.premiumkino.de/veranstaltung/preview"
 config :sac, :savoy_programm_url, "https://savoy.premiumkino.de/program"
 config :sac, :savoy_base_url, "https://savoy.premiumkino.de"

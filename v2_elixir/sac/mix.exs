@@ -34,6 +34,7 @@ defmodule SAC.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:quantum, "~> 3.0"},
       {:nostrum, "~> 0.4"},
       {:bamboo, "~> 2.1.0"},
       #{:bamboo_gmail, "~> 0.2.0"},
