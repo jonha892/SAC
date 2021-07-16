@@ -2,22 +2,14 @@ defmodule SAC.DiscordBot do
   use Nostrum.Consumer
 
   require Logger
-  alias Nostrum.Api
+  alias SAC.DiscordBot.Util
 
-  @channel String.to_integer(Application.fetch_env!(:sac, :discord_channel))
   @debug_channel String.to_integer(Application.fetch_env!(:sac, :discord_debug_channel))
   @welcome_channel String.to_integer(Application.fetch_env!(:sac, :discord_welcome_channel))
 
   @guild_id String.to_integer(Application.fetch_env!(:sac, :discord_guild_id))
   @role_id String.to_integer(Application.fetch_env!(:sac, :discord_role_id))
 
-  @channel_role_name Application.fetch_env!(:sac, :discord_channel_role_name)
-
-  def publish_notification(txt) do
-    Logger.debug "Publishing the message: " <> txt <> " to the channel " <> Integer.to_string(@channel)
-    r = Api.create_message(@channel, @channel_role_name <> " " <> txt)
-    Logger.debug "Publishing response: " <> inspect r
-  end
 
   def start_link do
     Consumer.start_link(__MODULE__)
@@ -47,6 +39,23 @@ defmodule SAC.DiscordBot do
       {@welcome_channel, "📧"} ->
         Logger.debug("Unregister email")
           #Api.create_message(debug_channel, "Discord signup")
+      _ -> :ignore
+    end
+  end
+
+  def handle_event({:MESSAGE_CREATE, msg, _ws_state}) do
+    Logger.info "handle event " <> inspect(msg)
+    case msg.channel_id do
+      863741609929211924 -> process_message(msg)
+      _ -> :ignore
+    end
+  end
+
+  def process_message(msg) do
+    case String.split(msg.content, " ") do
+      ["!list_users"] -> Util.handle_list_users_cmd(msg)
+      ["!list_seen_movies"] -> Util.handle_list_movies_cmd(msg)
+      ["!add_user", email, username] -> Util.handle_add_user_cmd(msg, email, username)
       _ -> :ignore
     end
   end

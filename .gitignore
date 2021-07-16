@@ -1,4 +1,11 @@
+
+db/*
+example_files/*
+
 processed.txt
 login_gmail.txt
+
+
 __pycache__/*
 .vscode/*
+

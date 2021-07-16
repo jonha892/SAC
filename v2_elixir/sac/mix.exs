@@ -34,12 +34,16 @@ defmodule SAC.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:ecto_sqlite3, "~> 0.5.6"},
+      {:quantum, "~> 3.0"},
       {:nostrum, "~> 0.4"},
       {:bamboo, "~> 2.1.0"},
       #{:bamboo_gmail, "~> 0.2.0"},
       {:bamboo_smtp, "~> 4.0.1"},
       {:finch, "~> 0.8"},
-      {:floki, "~> 0.31.0"}
+      {:floki, "~> 0.31.0"},
+      {:timex, "~> 3.7"},
+      {:jason, "~> 1.2"}
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
     ]

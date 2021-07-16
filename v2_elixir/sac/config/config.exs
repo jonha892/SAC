@@ -1,29 +1,27 @@
 import Config
 
+###
+### Scheduling
+###
+config :sac, SAC.Scheduler,
+  jobs: [
+    #{"*/15 * * * *",  {SAC.Checking, ":main", []}},
+    {"*/30 * * * *",  {SAC.Checking, :main, []}},
+  ]
+
+###
+### Constants
+###
 config :sac, :savoy_preview_url, "https://savoy.premiumkino.de/veranstaltung/preview"
 config :sac, :savoy_programm_url, "https://savoy.premiumkino.de/program"
-config :sac, :savoy_base_url, "https://savoy.premiumkino.de"
+config :sac, :savoy_movie_base_url, "https://savoy.premiumkino.de/movie/"
 
 config :sac, :seen_movies_filename, "./seen_movies.txt"
 config :sac, :recipients, "./recipients.txt"
 
-discord_channel = System.get_env("SAC_DISCORD_CHANNEL") || raise "The environment variable 'SAC_DISCORD_CHANNEL' is not set."
-config :sac, :discord_channel, discord_channel
-
-discord_debug_channel = System.get_env("SAC_DISCORD_DEBUG_CHANNEL") || raise "The environment variable 'SAC_DISCORD_DEBUG_CHANNEL' is not set."
-config :sac, :discord_debug_channel, discord_debug_channel
-
-discord_welcome_channel = System.get_env("SAC_DISCORD_WELCOME_CHANNEL") || raise "The environment variable 'SAC_DISCORD_WELCOME_CHANNEL' is not set."
-config :sac, :discord_welcome_channel, discord_welcome_channel
-
-guild_id = System.get_env("SAC_DISCORD_GUILD_ID") || raise "The environment variable 'SAC_DISCORD_GUILD_ID' is not set."
-config :sac, :discord_guild_id, guild_id
-role_id = System.get_env("SAC_DISCORD_ROLE_ID") || raise "The environment variable 'SAC_DISCORD_ROLE_ID' is not set."
-config :sac, :discord_role_id, role_id
-
-role_reference = "<@&" <> role_id <> ">"
-config :sac, :discord_channel_role_name, role_reference
-
+###
+### Bamboo
+###
 bamboo_username = System.get_env("SAC_SENDER_MAIL") || raise "The environment variable 'SAC_SENDER_MAIL' is not set."
 bamboo_password = System.get_env("SAC_SENDER_PASSWORD") || raise "The environment variable 'SAC_SENDER_PASSWORD' is not set."
 
@@ -43,10 +41,42 @@ config :sac, SAC.Mailer,
   no_mx_lookups: false, # can be `true`
   auth: :if_available # can be `:always`. If your smtp relay requires authentication set it to `:always`.
 
+
+
+###
+### Discord
+###
+discord_channel = System.get_env("SAC_DISCORD_CHANNEL") || raise "The environment variable 'SAC_DISCORD_CHANNEL' is not set."
+config :sac, :discord_channel, discord_channel
+
+discord_debug_channel = System.get_env("SAC_DISCORD_DEBUG_CHANNEL") || raise "The environment variable 'SAC_DISCORD_DEBUG_CHANNEL' is not set."
+config :sac, :discord_debug_channel, discord_debug_channel
+
+discord_welcome_channel = System.get_env("SAC_DISCORD_WELCOME_CHANNEL") || raise "The environment variable 'SAC_DISCORD_WELCOME_CHANNEL' is not set."
+config :sac, :discord_welcome_channel, discord_welcome_channel
+
+guild_id = System.get_env("SAC_DISCORD_GUILD_ID") || raise "The environment variable 'SAC_DISCORD_GUILD_ID' is not set."
+config :sac, :discord_guild_id, guild_id
+role_id = System.get_env("SAC_DISCORD_ROLE_ID") || raise "The environment variable 'SAC_DISCORD_ROLE_ID' is not set."
+config :sac, :discord_role_id, role_id
+
+role_reference = "<@&" <> role_id <> ">"
+config :sac, :discord_channel_role_name, role_reference
+
 nostrum_token = System.get_env("NOSTRUM_TOKEN") || raise "The environment variable 'NOSTRUM_TOKEN' is not set."
 config :nostrum,
   token: nostrum_token,
   num_shards: 1 # The number of shards you want to run your bot under, or :auto.
+
+###
+### Database
+###
+config :sac,
+  ecto_repos: [SAC.Repo]
+
+db_path = System.get_env("SAC_SQLITE_PATH") || raise "The environment variable 'SAC_SQLITE_PATH' is not set."
+config :sac, SAC.Repo,
+  database: db_path
 
 
 #import_config "#{Mix.env()}.exs"

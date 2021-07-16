@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+    sqlite3:
+        image: nouchka/sqlite3:latest
+        stdin_open: true
+        tty: true
+        volumes:
+            - ./../db/:/root/db/
+#version: "3.7"
+#services:
+#    db:
+#        build: ./sqlite3
+#        volumes:
+#            - ./test:/db
