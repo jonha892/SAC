@@ -6,8 +6,12 @@
 - [ ] Raspberry Pi architecture
   - [ ] How to run the app?
     - [ ] docker-compsoe for DB plus SAC?
+    - [ ] create own dockerfile 
+    - [ ] create own docker-compose file
     - [ ] persistent storage
       - [ ] backup
+
+- [ ] Use an E-Mail account specific for this application
 
 ## TODO v2 elixir:
 - [ ] Refactoring
@@ -46,7 +50,7 @@
       - [ ] How long?
       - [ ] Discord USER or some name
     - [ ] Seen movies
-      - [ ] How long?
+      - [ ] How long? (e.g.: first showing plus 6 months)
       - [ ] First time found
       - [ ] First time found with playtime
       - [ ] How often a movie was found (for different playtimes)
