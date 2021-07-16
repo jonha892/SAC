@@ -12,7 +12,8 @@ defmodule SAC do
     IO.puts "starting"
     children = [
       { Finch, name: MyFinch },
-      SAC.Scheduler
+      SAC.Scheduler,
+      SAC.Repo
     ]
 
     opts = [strategy: :one_for_one, name: SAC.Supervisor]
