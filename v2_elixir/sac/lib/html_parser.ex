@@ -26,7 +26,6 @@ defmodule SAC.HTMLParser do
     #IO.inspect(playtime)
     #IO.inspect(dates)
 
-
     case playtime do
       "" -> %{bookable: false}
       _ -> %{bookable: true, title: title, first_playtime: playtime, dates: dates}

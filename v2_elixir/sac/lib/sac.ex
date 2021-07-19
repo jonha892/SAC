@@ -20,7 +20,7 @@ defmodule SAC do
 
     Supervisor.start_link(children, opts)
 
-    SAC.Checking.main()
+    #SAC.Checking.main()
     {:ok, self()}
   end
 end
