@@ -66,7 +66,7 @@ defmodule SAC.Persistence do
 end
 
 
-# SAC.Persistence.add_user("test", "rtdsrtdr")
+# SAC.Persistence.add_user("test_email", "test_usernanme")
 # SAC.Persistence.delete_usere("test")
 # SAC.Persistence.fetch_users()
 # https://cheatography.com/virviil/cheat-sheets/ecto/

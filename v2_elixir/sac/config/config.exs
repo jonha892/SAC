@@ -3,11 +3,11 @@ import Config
 ###
 ### Scheduling
 ###
-config :sac, SAC.Scheduler,
-  jobs: [
-    #{"*/15 * * * *",  {SAC.Checking, ":main", []}},
-    {"*/30 * * * *",  {SAC.Checking, :main, []}},
-  ]
+#config :sac, SAC.Scheduler,
+#  jobs: [
+#    #{"*/15 * * * *",  {SAC.Checking, ":main", []}},
+#    {"*/30 * * * *",  {SAC.Checking, :main, []}},
+#  ]
 
 
 ###

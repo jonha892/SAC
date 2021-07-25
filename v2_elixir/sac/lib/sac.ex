@@ -21,6 +21,7 @@ defmodule SAC do
     Supervisor.start_link(children, opts)
 
     #SAC.Checking.main()
+    SAC.Persistence.add_user("test_email2", "test_usernanme")
     {:ok, self()}
   end
 end
