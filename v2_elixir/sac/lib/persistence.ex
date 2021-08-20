@@ -34,13 +34,11 @@ defmodule SAC.Persistence do
     resp
   end
 
-  def delete_user(email) do
-    Logger.debug "deleting the user with email: " <> email <> "..."
-    attrs = %{email: email}
-    resp = %SAC.User{}
-    |> SAC.User.changeset(attrs)
-    |> SAC.Repo.delete
-    Logger.debug "deleting user was successful" <> inspect(resp)
+  def remove_user(email) do
+    Logger.debug "Removing the user with email " <> email <> "..."
+    user = SAC.Repo.get(SAC.User, email)
+    resp = SAC.Repo.delete user
+    Logger.debug "Removed user with email " <> email <> " successfully. Response: " <> inspect(resp)
     resp
   end
 

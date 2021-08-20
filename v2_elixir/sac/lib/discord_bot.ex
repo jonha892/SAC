@@ -21,7 +21,7 @@ defmodule SAC.DiscordBot do
     case {msg.channel_id, msg.emoji.name} do
       {@welcome_channel, "🎦"} ->
         Logger.debug("Register discord")
-        r = Api.add_guild_member_role(@guild_id, msg.user_id, @role_id)
+        r = Nostrum.Api.add_guild_member_role(@guild_id, msg.user_id, @role_id)
         Logger.debug("Add role-response" <> inspect(r))
       {@welcome_channel, "📧"} ->
         Logger.debug("Register email")
@@ -34,7 +34,7 @@ defmodule SAC.DiscordBot do
     case {msg.channel_id, msg.emoji.name} do
       {@welcome_channel, "🎦"} ->
         Logger.debug("Unregister discord")
-        r = Api.remove_guild_member_role(@guild_id, msg.user_id, @role_id)
+        r = Nostrum.Api.remove_guild_member_role(@guild_id, msg.user_id, @role_id)
         Logger.debug("Remove role-response" <> inspect(r))
       {@welcome_channel, "📧"} ->
         Logger.debug("Unregister email")
@@ -56,6 +56,7 @@ defmodule SAC.DiscordBot do
       ["!list_users"] -> Util.handle_list_users_cmd(msg)
       ["!list_seen_movies"] -> Util.handle_list_movies_cmd(msg)
       ["!add_user", email, username] -> Util.handle_add_user_cmd(msg, email, username)
+      ["!remove_user", email] -> Util.handle_remove_user_cmd(msg, email)
       _ -> :ignore
     end
   end

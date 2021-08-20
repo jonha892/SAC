@@ -41,4 +41,11 @@ defmodule SAC.DiscordBot.Util do
     resp_msg = "Successfully added the new user with email: " <> email <> " and username:" <> username
     Nostrum.Api.create_message(msg.channel_id, resp_msg)
   end
+
+  def handle_remove_user_cmd(msg, email) do
+    {:ok, _} = Persistence.remove_user(email)
+
+    resp_msg = "Successfully removed the user with email " <> email <> "."
+    Nostrum.Api.create_message(msg.channel_id, resp_msg)
+  end
 end

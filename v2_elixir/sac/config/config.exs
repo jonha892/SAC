@@ -77,6 +77,20 @@ config :sac,
 db_path = System.get_env("SAC_SQLITE_PATH") || raise "The environment variable 'SAC_SQLITE_PATH' is not set."
 config :sac, SAC.Repo,
   database: db_path
+  
+###
+### Logging
+###
+config :logger,
+  backends: [:console, {LoggerFileBackend, :error_log}]
+config :logger, :error_log,
+  path: "./logs/error_log.log"
+
+config :logger,
+  backends: [:console, {LoggerFileBackend, :debug_log}]
+config :logger, :debug_log,
+  path: "./logs/debug_log.log",
+  level: :debug
 
 
 #import_config "#{Mix.env()}.exs"

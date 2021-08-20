@@ -28,3 +28,6 @@ sac-*.tar
 seen_movies.txt
 recipients.txt
 secret_export.sh
+
+# logfiles
+logs/
