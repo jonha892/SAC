@@ -56,9 +56,10 @@ guild_id = System.get_env("SAC_DISCORD_GUILD_ID") || raise "The environment vari
 config :sac, :discord_guild_id, guild_id
 role_id = System.get_env("SAC_DISCORD_ROLE_ID") || raise "The environment variable 'SAC_DISCORD_ROLE_ID' is not set."
 config :sac, :discord_role_id, role_id
+dev_role_id = System.get_env("SAC_DISCORD_DEV_ROLE_ID") || raise "The environment variable 'SAC_DISCORD_DEV_ROLE_ID' is not set."
 
-role_reference = "<@&" <> role_id <> ">"
-config :sac, :discord_channel_role_name, role_reference
+config :sac, :discord_channel_role_name, "<@&" <> role_id <> ">"
+config :sac, :discord_channel_dev_role_name, "<@&" <> dev_role_id <> ">"
 
 nostrum_token = System.get_env("NOSTRUM_TOKEN") || raise "The environment variable 'NOSTRUM_TOKEN' is not set."
 config :nostrum,

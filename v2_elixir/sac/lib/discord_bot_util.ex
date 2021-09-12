@@ -4,8 +4,10 @@ defmodule SAC.DiscordBot.Util do
   require Nostrum.Api
   alias SAC.Persistence
 
+  @debug_channel String.to_integer(Application.fetch_env!(:sac, :discord_debug_channel))
   @notification_channel String.to_integer(Application.fetch_env!(:sac, :discord_channel))
   @channel_role_name Application.fetch_env!(:sac, :discord_channel_role_name)
+  @dev_role_name Application.fetch_env!(:sac, :discord_channel_dev_role_name)
 
   def publish_seen_movie(txt) do
     Logger.debug "Publishing the message: " <> txt <> " to the channel " <> Integer.to_string(@notification_channel)
@@ -48,4 +50,9 @@ defmodule SAC.DiscordBot.Util do
     resp_msg = "Successfully removed the user with email " <> email <> "."
     Nostrum.Api.create_message(msg.channel_id, resp_msg)
   end
+
+  def publish_error(msg) do
+    Nostrum.Api.create_message(@debug_channel, @dev_role_name <> " " <> msg)
+  end
+
 end

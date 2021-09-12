@@ -2,7 +2,7 @@ defmodule SAC.HTMLParser do
   require Logger
   use Timex
 
-  alias SAC.Util
+  alias SAC.{Util, ErrorHandling}
 
   def parse_response(%Finch.Response{body: body, headers: h, status: 200}) do
     Floki.parse_document body
@@ -22,6 +22,9 @@ defmodule SAC.HTMLParser do
     movies = Regex.scan(regex, script_text)
     |> Enum.map(fn x -> Enum.at(x, 2) end)
     |> Enum.uniq
+
+    possible_errors = movies |> Enum.filter(fn title -> String.contains?(title, [";", "\\"]) end)
+    ErrorHandling.title_error(possible_errors)
 
     Logger.info "titles " <> inspect(movies)
     Logger.info inspect(Kernel.length(movies))
