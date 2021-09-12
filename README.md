@@ -30,6 +30,7 @@
     - [ ] Fehlerbehandlung
       - [ ] DEFAULT -> logging
         - [ ] persistente Log file
+          https://elixirforum.com/t/auto-rotating-logs-by-file-size/38844/6
         - [ ] bei kritischem Fehler, mehrmals versuchen, sonst BOT offline schalten, und dann sehen wir das manuell
       - [ ] kein Film wird gefunden --> 
       - [ ] Savoy Seite kann nicht aufgerufen werden

@@ -46,9 +46,6 @@ config :sac, SAC.Mailer,
 ###
 ### Discord
 ###
-discord_channel = System.get_env("SAC_DISCORD_CHANNEL") || raise "The environment variable 'SAC_DISCORD_CHANNEL' is not set."
-config :sac, :discord_channel, discord_channel
-
 discord_debug_channel = System.get_env("SAC_DISCORD_DEBUG_CHANNEL") || raise "The environment variable 'SAC_DISCORD_DEBUG_CHANNEL' is not set."
 config :sac, :discord_debug_channel, discord_debug_channel
 
@@ -74,23 +71,5 @@ config :nostrum,
 config :sac,
   ecto_repos: [SAC.Repo]
 
-db_path = System.get_env("SAC_SQLITE_PATH") || raise "The environment variable 'SAC_SQLITE_PATH' is not set."
-config :sac, SAC.Repo,
-  database: db_path
-  
-###
-### Logging
-###
-config :logger,
-  backends: [:console, {LoggerFileBackend, :error_log}]
-config :logger, :error_log,
-  path: "./logs/error_log.log"
 
-config :logger,
-  backends: [:console, {LoggerFileBackend, :debug_log}]
-config :logger, :debug_log,
-  path: "./logs/debug_log.log",
-  level: :debug
-
-
-#import_config "#{Mix.env()}.exs"
+import_config "#{Mix.env()}.exs"

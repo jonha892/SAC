@@ -46,7 +46,7 @@ defmodule SAC.DiscordBot do
   def handle_event({:MESSAGE_CREATE, msg, _ws_state}) do
     Logger.info "handle event " <> inspect(msg)
     case msg.channel_id do
-      863741609929211924 -> process_message(msg)
+      @debug_channel -> process_message(msg)
       _ -> :ignore
     end
   end
