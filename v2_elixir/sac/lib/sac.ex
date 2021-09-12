@@ -24,7 +24,7 @@ defmodule SAC do
     :logger.add_handlers(:sac)
 
     #SAC.Persistence.add_user("test_email2", "test_usernanme")
-    SAC.Checking.find_movies() |> inspect |> Logger.info
+    #SAC.Checking.find_movies() |> inspect |> Logger.info
     #SAC.Checking.main()
     #SAC.Persistence.remove_all_movies()
     #SAC.Checking.handle_movie("free-guy")
