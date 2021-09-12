@@ -9,14 +9,8 @@ defmodule SAC.HTMLParser do
   end
 
   def find_movies(:program, document) do
-    #a_elements = Floki.find(document, "a")
-    #hrefs = Floki.attribute(a_elements, "href")
-    #filter_hrefs(hrefs)
-
-
     # regex
-    #(,\\&q;slug\\&q;:\\&q;)(\*+)
-    regex = ~r/(000\\&q;,\\&q;slug\\&q;:\\&q;)(.+?(?=\\&q;,\\&q;title\\&q;))/#(\\&q;,\\&q;title\\&q;)
+    regex = ~r/(000\\&q;,\\&q;slug\\&q;:\\&q;)(.+?(?=\\&q;,\\&q;auditorium\\&q;))/
     script_text = Floki.find(document, "#flebbe-state")
       |> Floki.raw_html
     movies = Regex.scan(regex, script_text)
@@ -24,7 +18,9 @@ defmodule SAC.HTMLParser do
     |> Enum.uniq
 
     possible_errors = movies |> Enum.filter(fn title -> String.contains?(title, [";", "\\"]) end)
-    ErrorHandling.title_error(possible_errors)
+    if Kernel.length(possible_errors) > 0 do
+      ErrorHandling.title_error(possible_errors)
+    end
 
     Logger.info "titles " <> inspect(movies)
     Logger.info inspect(Kernel.length(movies))
@@ -35,7 +31,6 @@ defmodule SAC.HTMLParser do
   def parse_movie(document, title) do
     title_pretty = Floki.find(document, "title") |> Floki.text |> Util.transform_title
 
-    #date_regex = ~r/\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-4]):([0-5][0-9]):\d{2}.\d{3}(\\&q;,\\&q;slug\\&q;:\\&q;)free-guy/
     date_regex = ~r/(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3})(\\&q;,\\&q;slug\\&q;:\\&q;)#{title}/
     script_text = Floki.find(document, "#flebbe-state")
       |> Floki.raw_html
@@ -70,7 +65,3 @@ defmodule SAC.HTMLParser do
     Enum.filter(hrefs, fn x -> String.match?(x, ~r/^\/movie\//) end) |> Enum.uniq |> Enum.map(fn s -> String.slice(s, 7..-1) end)
   end
 end
-
-#playtime = Floki.find(document, "movie-detail-page") |> Floki.find(".playtimes-movie-item-component") |> Floki.find("span") |> Floki.find(".time") |> Floki.text
-#single_date = Floki.find(document, "movie-detail-page") |> Floki.find(".date-holder") |> Floki.find(".select-single") |> Floki.text |> String.trim
-#multiple_playtimes = Floki.find(document, "movie-detail-page") |> Floki.find(".date-holder") |> Floki.find("option") |> Enum.map(fn x -> x |> Floki.text |> String.trim end)
